@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/cdn/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+        <script src="/cdn/jquery/jquery.min.js"></script>
+        <script src="/cdn/knockout/knockout-latest.js"></script>
+        <script src="/cdn/bootstrap/js/bootstrap.min.js"></script>
+
+        <style>
+            .face {
+                border: solid 1px #FF0000;
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                height: 25px;
+                width: 25px;
+            }
+        </style>
+    </head>
+    <body class="container">
+        <h1>Face API</h1>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Submit photos here</h3>
+                <button class="btn btn-default" data-bind="click: addImage">
+                    <span class="glyphicon glyphicon-plus"></span> add
+                </button>
+                <button class="btn btn-default" data-bind="click: processImages">
+                    <span class="glyphicon glyphicon-sort"></span> process
+                </button>
+            </div>
+            <div class="panel-body" data-bind="foreach: imageUrls">
+                <div class="col-sm-4" style="padding-bottom: 5px;">
+                    <input class="form-control" data-bind="textInput: url">
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Images</h3>
+            </div>
+            <div class="panel-body" data-bind="foreach: imageUrls">
+                <div class="col-sm-4" style="padding-bottom: 5px;">
+                    <img class="img-responsive" data-bind="attr: { src: url }" />
+                    <!-- ko foreach: faces -->
+                        <!--<div class="face" data-bind="attr: { style: style }"></div>-->
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" data-bind="foreach: groups">
+            <div class="panel-heading">
+                <h3 class="panel-title">Group <span data-bind="text: $index"></span></h3>
+            </div>
+            <div class="panel-body" data-bind="foreach: imageUrls">
+                <div class="col-sm-4" style="padding-bottom: 5px;">
+                    <img class="img-responsive" data-bind="attr: { src: url }" />
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                var model = {
+                    imageUrls: ko.observableArray([
+                        { url: 'https://avatars0.githubusercontent.com/u/2947605?v=3&s=80', faces: [] },
+                        { url: 'https://frameworksdays.com/uploads/speakers/boyko.jpg', faces: [] },
+                        { url: 'http://boykoant.azurewebsites.net/Media/Default/my-photo/boykoant-123x161.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CwzRe2uUUAAHcEs.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CwrZLfcVIAADv7e.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/profile_images/650745567749009409/jvjLTfzi_400x400.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CwrZLY5UcAAILiF.jpg', faces: [] },
+                        { url: 'https://azurecommunityua.blob.core.windows.net/azureday/2016/speakers/ILeontyev01.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CxC0BgKUAAAsWYZ.jpg', faces: [] }
+                    ]),
+                    groups: ko.observableArray([])
+                };
+
+                model.addImage = function() {
+                    model.imageUrls.push({ url: '' });
+                };
+
+                model.processImages = function() {
+                    var images = model
+                        .imageUrls
+                        .removeAll()
+                        .filter(function(i) { return !!i.url.trim() });
+
+                    if (images.length == 0) {
+                        return;
+                    }
+
+                    $.ajax({
+                        method: 'POST',
+                        data: JSON.stringify({ images: images }),
+                        contentType: 'application/json'
+                    })
+                    .done(function(data) {
+                        data.images.forEach(function(image) {
+                            image.faces.forEach(function(face) {
+                                face.style = 'top:' + parseInt(face.faceRectangle.top) + 'px;'
+                                    + 'left:' + (parseInt(face.faceRectangle.left) + 15) + 'px;'
+                                    + 'width:' + parseInt(face.faceRectangle.width) + 'px;'
+                                    + 'height:' + parseInt(face.faceRectangle.height) + 'px;';
+                            });
+                            model.imageUrls.push(image);
+                        });
+                        data.groups.forEach(function(group) {
+                            model.groups.push(group);
+                        });
+                    });
+                };
+
+                ko.applyBindings(model);
+            })();
+        </script>
+
+    </body>
+</html>

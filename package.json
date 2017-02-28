@@ -1,22 +1,13 @@
 {
   "name": "face-api",
   "version": "0.0.1",
-  "description": "",
-  "main": "run.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ZumoCommunity/Face-API.git"
   },
-  "keywords": [
-    "azure",
-    "cognitive",
-    "services",
-    "face",
-    "api"
-  ],
   "author": "Tatiana Zubets",
   "license": "MIT",
   "bugs": {
@@ -24,7 +15,18 @@
   },
   "homepage": "https://github.com/ZumoCommunity/Face-API#readme",
   "dependencies": {
+    "body-parser": "~1.16.0",
+    "bootstrap": "^3.3.7",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.0",
+    "express": "~4.14.1",
+    "hjs": "~0.0.6",
+    "jquery": "^3.1.1",
+    "knockout": "^3.4.1",
+    "lodash": "^4.17.4",
+    "morgan": "~1.7.0",
     "nconf": "^0.8.4",
-    "promise": "^7.1.1"
+    "promise": "^7.1.1",
+    "serve-favicon": "~2.3.2"
   }
 }
