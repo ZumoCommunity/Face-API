@@ -8,7 +8,8 @@ var configService = require('./../config-service');
 var service = {};
 
 service.methods = {
-    detect: 'https://westus.api.cognitive.microsoft.com/face/v1.0/detect'
+    detect: 'https://westus.api.cognitive.microsoft.com/face/v1.0/detect',
+    group: 'https://westus.api.cognitive.microsoft.com/face/v1.0/group'
 };
 
 service.call = function (requestUrl, requestBody) {
