@@ -6,6 +6,17 @@
         <script src="/cdn/jquery/jquery.min.js"></script>
         <script src="/cdn/knockout/knockout-latest.js"></script>
         <script src="/cdn/bootstrap/js/bootstrap.min.js"></script>
+
+        <style>
+            .face {
+                border: solid 1px #FF0000;
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                height: 25px;
+                width: 25px;
+            }
+        </style>
     </head>
     <body class="container">
         <h1>Face API</h1>
@@ -34,6 +45,9 @@
             <div class="panel-body" data-bind="foreach: imageUrls">
                 <div class="col-sm-4" style="padding-bottom: 5px;">
                     <img class="img-responsive" data-bind="attr: { src: url }" />
+                    <!-- ko foreach: faces -->
+                        <!--<div class="face" data-bind="attr: { style: style }"></div>-->
+                    <!-- /ko -->
                 </div>
             </div>
         </div>
@@ -53,14 +67,15 @@
             (function () {
                 var model = {
                     imageUrls: ko.observableArray([
-                        { url: 'https://avatars0.githubusercontent.com/u/2947605?v=3&s=80' },
-                        { url: 'https://frameworksdays.com/uploads/speakers/boyko.jpg' },
-                        { url: 'http://boykoant.azurewebsites.net/Media/Default/my-photo/boykoant-123x161.jpg' },
-                        { url: 'https://pbs.twimg.com/media/CwzRe2uUUAAHcEs.jpg' },
-                        { url: 'https://pbs.twimg.com/media/CwrZLfcVIAADv7e.jpg' },
-                        { url: 'https://pbs.twimg.com/profile_images/650745567749009409/jvjLTfzi_400x400.jpg' },
-                        { url: 'https://pbs.twimg.com/media/CwrZLY5UcAAILiF.jpg' },
-                        { url: 'https://azurecommunityua.blob.core.windows.net/azureday/2016/speakers/ILeontyev01.jpg' }
+                        { url: 'https://avatars0.githubusercontent.com/u/2947605?v=3&s=80', faces: [] },
+                        { url: 'https://frameworksdays.com/uploads/speakers/boyko.jpg', faces: [] },
+                        { url: 'http://boykoant.azurewebsites.net/Media/Default/my-photo/boykoant-123x161.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CwzRe2uUUAAHcEs.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CwrZLfcVIAADv7e.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/profile_images/650745567749009409/jvjLTfzi_400x400.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CwrZLY5UcAAILiF.jpg', faces: [] },
+                        { url: 'https://azurecommunityua.blob.core.windows.net/azureday/2016/speakers/ILeontyev01.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CxC0BgKUAAAsWYZ.jpg', faces: [] }
                     ]),
                     groups: ko.observableArray([])
                 };
@@ -86,6 +101,12 @@
                     })
                     .done(function(data) {
                         data.images.forEach(function(image) {
+                            image.faces.forEach(function(face) {
+                                face.style = 'top:' + parseInt(face.faceRectangle.top) + 'px;'
+                                    + 'left:' + (parseInt(face.faceRectangle.left) + 15) + 'px;'
+                                    + 'width:' + parseInt(face.faceRectangle.width) + 'px;'
+                                    + 'height:' + parseInt(face.faceRectangle.height) + 'px;';
+                            });
                             model.imageUrls.push(image);
                         });
                         data.groups.forEach(function(group) {
