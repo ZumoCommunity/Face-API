@@ -1,0 +1,29 @@
+{
+  "name": "face-api",
+  "version": "0.0.1",
+  "description": "",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZumoCommunity/Face-API.git"
+  },
+  "keywords": [
+    "azure",
+    "cognitive",
+    "services",
+    "face",
+    "api"
+  ],
+  "author": "Tatiana Zubets",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ZumoCommunity/Face-API/issues"
+  },
+  "homepage": "https://github.com/ZumoCommunity/Face-API#readme",
+  "dependencies": {
+
+  }
+}
