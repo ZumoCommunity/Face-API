@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ZumoCommunity/Face-API#readme",
   "dependencies": {
-
+    "nconf": "^0.8.4",
+    "promise": "^7.1.1"
   }
 }
