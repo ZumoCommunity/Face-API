@@ -79,8 +79,6 @@
                         return;
                     }
 
-                    console.log(images);
-
                     $.ajax({
                         method: 'POST',
                         data: JSON.stringify({ images: images }),
