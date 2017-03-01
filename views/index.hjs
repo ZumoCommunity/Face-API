@@ -21,70 +21,100 @@
     <body class="container">
         <h1>Face API</h1>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Submit photos here</h3>
-                <button class="btn btn-default" data-bind="click: addImage">
-                    <span class="glyphicon glyphicon-plus"></span> add
-                </button>
-                <button class="btn btn-default" data-bind="click: processImages">
-                    <span class="glyphicon glyphicon-sort"></span> process
-                </button>
-            </div>
-            <div class="panel-body" data-bind="foreach: imageUrls">
-                <div class="col-sm-4" style="padding-bottom: 5px;">
-                    <input class="form-control" data-bind="textInput: url">
+        <div data-bind="visible: !isLoading()">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <p class="navbar-text">Submit photos here</p>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <button class="btn btn-default navbar-btn" data-bind="click: addImage">
+                                <span class="glyphicon glyphicon-plus"></span> add
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-default navbar-btn" data-bind="click: processImages">
+                                <span class="glyphicon glyphicon-sort"></span> process
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="panel panel-default">
+                <div class="panel-body" data-bind="foreach: imageUrls">
+                    <div class="col-sm-4" style="padding-bottom: 5px; padding-left: 0px;">
+                        <input class="form-control" data-bind="textInput: url">
+                    </div>
                 </div>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Images</h3>
+                </div>
+                <div class="panel-body" data-bind="foreach: imageUrls">
+                    <div class="col-sm-4" style="padding-bottom: 5px; padding-left: 0px;">
+                        <img class="img-responsive" data-bind="attr: { src: url }" />
+                        <!-- ko foreach: faces -->
+                            <!--<div class="face" data-bind="attr: { style: style }"></div>-->
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ko foreach: groups -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Group <span data-bind="text: $index"></span></h3>
+                </div>
+                <div class="panel-body" data-bind="foreach: imageUrls">
+                    <div class="col-sm-4" style="padding-bottom: 5px; padding-left: 0px;">
+                        <img class="img-responsive" data-bind="attr: { src: url }" />
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Images</h3>
-            </div>
-            <div class="panel-body" data-bind="foreach: imageUrls">
-                <div class="col-sm-4" style="padding-bottom: 5px;">
-                    <img class="img-responsive" data-bind="attr: { src: url }" />
-                    <!-- ko foreach: faces -->
-                        <!--<div class="face" data-bind="attr: { style: style }"></div>-->
-                    <!-- /ko -->
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default" data-bind="foreach: groups">
-            <div class="panel-heading">
-                <h3 class="panel-title">Group <span data-bind="text: $index"></span></h3>
-            </div>
-            <div class="panel-body" data-bind="foreach: imageUrls">
-                <div class="col-sm-4" style="padding-bottom: 5px;">
-                    <img class="img-responsive" data-bind="attr: { src: url }" />
-                </div>
-            </div>
+        <div data-bind="visible: isLoading()">
+            Loading...
         </div>
 
         <script>
             (function () {
                 var model = {
                     imageUrls: ko.observableArray([
+                        // Anton
                         { url: 'https://avatars0.githubusercontent.com/u/2947605?v=3&s=80', faces: [] },
                         { url: 'https://frameworksdays.com/uploads/speakers/boyko.jpg', faces: [] },
                         { url: 'http://boykoant.azurewebsites.net/Media/Default/my-photo/boykoant-123x161.jpg', faces: [] },
                         { url: 'https://pbs.twimg.com/media/CwzRe2uUUAAHcEs.jpg', faces: [] },
                         { url: 'https://pbs.twimg.com/media/CwrZLfcVIAADv7e.jpg', faces: [] },
+
+                        // Igor
                         { url: 'https://pbs.twimg.com/profile_images/650745567749009409/jvjLTfzi_400x400.jpg', faces: [] },
                         { url: 'https://pbs.twimg.com/media/CwrZLY5UcAAILiF.jpg', faces: [] },
+                        { url: 'https://pbs.twimg.com/media/CxC0BgKUAAAsWYZ.jpg', faces: [] },
                         { url: 'https://azurecommunityua.blob.core.windows.net/azureday/2016/speakers/ILeontyev01.jpg', faces: [] },
-                        { url: 'https://pbs.twimg.com/media/CxC0BgKUAAAsWYZ.jpg', faces: [] }
+
+                        // Brad
+                        { url: 'http://img.timeinc.net/time/time100/2007/images/brad_pitt.jpg', faces: [] },
+                        { url: 'https://www.biography.com/.image/c_fit,cs_srgb,dpr_1.0,q_80,w_620/MTI2NTgyODYzMTM4MTY3MjYy/brad-pitt-shutterstock_203523007-600x487jpg.jpg', faces: [] },
+                        { url: 'http://i.dailymail.co.uk/i/pix/2016/01/11/09/3006990D00000578-3393557-image-a-39_1452503396230.jpg', faces: [] }
                     ]),
-                    groups: ko.observableArray([])
+                    groups: ko.observableArray([]),
+                    isLoading: ko.observable(false)
                 };
 
                 model.addImage = function() {
-                    model.imageUrls.push({ url: '' });
+                    model.imageUrls.push({ url: '', faces: [] });
                 };
 
                 model.processImages = function() {
+                    model.isLoading(true);
+                    model.groups.removeAll();
                     var images = model
                         .imageUrls
                         .removeAll()
@@ -102,22 +132,22 @@
                     .done(function(data) {
                         data.images.forEach(function(image) {
                             image.faces.forEach(function(face) {
-                                face.style = 'top:' + parseInt(face.faceRectangle.top) + 'px;'
-                                    + 'left:' + (parseInt(face.faceRectangle.left) + 15) + 'px;'
-                                    + 'width:' + parseInt(face.faceRectangle.width) + 'px;'
-                                    + 'height:' + parseInt(face.faceRectangle.height) + 'px;';
+                                face.style = 'top:' + face.faceRectangle.top + 'px;'
+                                    + 'left:' + face.faceRectangle.left + 'px;'
+                                    + 'width:' + face.faceRectangle.width + 'px;'
+                                    + 'height:' + face.faceRectangle.height + 'px;';
                             });
                             model.imageUrls.push(image);
                         });
                         data.groups.forEach(function(group) {
                             model.groups.push(group);
                         });
+                        model.isLoading(false);
                     });
                 };
 
                 ko.applyBindings(model);
             })();
         </script>
-
     </body>
 </html>

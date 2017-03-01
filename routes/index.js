@@ -24,9 +24,11 @@ router.post('/', function(req, res) {
 
             for (var i = 0; i < images.length; i++) {
                 images[i].faces = JSON.parse(responses[i]);
-                images[i].faces.forEach(function(face) {
-                    faces.push(face.faceId);
-                });
+                if (Array.isArray(images[i].faces)) {
+                    images[i].faces.forEach(function(face) {
+                        faces.push(face.faceId);
+                    });
+                }
             }
 
             var uniqueFaces = _.uniq(faces);
